@@ -20,11 +20,11 @@ export const SOCIAL_LINKS = [
 export const MY_STACK = {
     frontend: [
         {
-            name: 'Javascript',
+            name: 'JavaScript',
             icon: '/logo/js.png',
         },
         {
-            name: 'Typescript',
+            name: 'TypeScript',
             icon: '/logo/ts.png',
         },
         {
@@ -48,11 +48,11 @@ export const MY_STACK = {
             icon: '/logo/gsap.png',
         },
         {
-            name: 'Frammer Motion',
+            name: 'Framer Motion',
             icon: '/logo/framer-motion.png',
         },
         {
-            name: 'SASS',
+            name: 'Sass',
             icon: '/logo/sass.png',
         },
         {
@@ -66,7 +66,7 @@ export const MY_STACK = {
             icon: '/logo/node.png',
         },
         {
-            name: 'Nest.js',
+            name: 'NestJS',
             icon: '/logo/nest.svg',
         },
         {
@@ -296,7 +296,7 @@ export const MY_EXPERIENCE = [
         duration: 'Oct 2023 - Nov 2024',
     },
     {
-        title: 'FRONTEND ENGINEER',
+        title: 'Frontend Engineer',
         company: 'Anchorblock Technology',
         duration: 'Oct 2022 - Sep 2023',
     },
