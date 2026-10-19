@@ -163,6 +163,80 @@ export const PROJECTS: IProject[] = [
         ],
     },
     {
+    title: 'Basha Bazar',
+    year: 2026,
+    description: `Rental hunting in Bangladesh does not happen in a search box. Most to-lets are a paper sign taped to a gate — you find them by walking the alleys. Basha Bazar is the app for that walk: it records where you have been, lets you pin every to-let you pass, and turns those pins into a map the whole city builds together.
+
+    I built the whole product solo — the Android app, the Supabase backend, the marketing site, the release pipeline and the growth loops.
+
+    ### What it does
+
+    **Walk tracking**
+    - Start Walk records your GPS trail in the background — screen off, phone in pocket — via an Android foreground service, and draws it on the map, so you never re-walk an alley you already covered.
+    - Recording only runs between Start and Stop, never always-on, with a Play-compliant prominent-disclosure prompt before the OS asks for "Always" location.
+    - A Walks screen lists every recorded trail with its distance; tap to view the path.
+
+    **Pinning a to-let**
+    - Drop a pin at your current GPS, or long-press anywhere on the map.
+    - Capture rent, contact, rooms, washrooms, balconies, floor, sunlight, gas, which tenants the landlord accepts, multiple photos, and free-text notes — every field optional.
+    - Point the camera at the sign and an AI vision pass reads the phone number straight off the photo into the contact field; once it holds a dialable number the scan button turns into a call button.
+    - A built-in checklist suggests what else to ask the landlord (water hours, advance months, parking, rules).
+    - Toggle each contribution public or private — public is the default, framed as the community bargain.
+
+    **A shared map**
+    - A to-let is a shared place, not a private note. Each signed-in user adds one editable contribution; the detail screen stacks every contributor's block with their name, fields and photos.       - Rent is never averaged or invented — the map shows the newest contribution per pla
+    - Map pins are price bubbles (৳18k, ৳1.2L) over a custom-styled basemap that keeps road names and drops commercial POIs, because foot navigation in Dhaka runs on road names.                      - A draggable bottom sheet lists the same places as a photo-first two-column grid, pl, with client-side filters for rent range, bedrooms, bathrooms, availability andphotos — and an honest "N of M shown" label.                                                                                                                                                       - Report a bad listing; at two distinct reporters a place drops out of the map serve
+    - Share a find or the app itself through the OS share sheet — the landlord's number is deliberately never included.                                                                                
+    **Offline-first**                                                                                                                                                                                  - Pinning works with no signal: writes land in a local SQLite outbox and push when cthe local copy is deleted so a record lives in exactly one place.
+    - The cloud upsert is keyed on (place, user), so a retry after a mid-push photo failure can never duplicate a contribution.                                                                        
+    ### Technical details                                                                                                                                                                              
+    - **React Native + Expo 57 (dev build, not Expo Go)** with TypeScript. Background location needs native modules, which also rules out a web/PWA version entirely — browsers cannot record GPS with the screen off.
+    - **Background GPS** through expo-location + expo-task-manager: a top-level task definition, an Android foreground service with a persistent notification, and UIBackgroundModes on iOS.
+    - **Supabase** backend — Postgres + PostGIS for the viewport query, row-level securiblic-or-mine, write only your own), Storage for photos, and SQL migrations in therepo.
+    - **Google sign-in** behind a login wall: native ID token exchanged for a Supabase sion that purges storage and cascades the user's rows.
+    - **Edge Functions** hold the secrets the binary must never contain — the Gemini vision call and the account-delete flow both run server-side behind a verified JWT.
+    - **Vision cost control**: images are downscaled to 768px and re-encoded before the s a single Gemini image tile instead of a dozen.
+    - **Rendering traps solved the hard way**: Android snapshots child-view map markers to bitmaps, so price bubbles keep tracksViewChanges on until layout settles and must use the system font — a
+    custom family is not ready at capture time and the pin snapshots blank.
+    - **Analytics with privacy rules**: PostHog product analytics and session replay, where replay masks all images and inputs, third-party phone numbers rendered as plain text are explicitly
+    wrapped, and no event property ever carries rent, contact, photos or coordinates.
+    - **AppsFlyer** for ad install attribution only — no product events, off entirely without a dev key.
+    - **Releases are tag-driven CI**: push a version tag and GitHub Actions builds a sigploads it to the Play internal track; both versionName and versionCode are derivedfrom the tag so a version can never be hand-bumped into a duplicate.
+    - **Landing site** in Next.js 16 (App Router) + Tailwind v4 + Motion, Bangla-first wyped dictionary that fails the build on a missing key.`,
+        role: 'Solo developer — product, design, mobile app, backend, landing site, release pipeline and growth',
+        techStack: [
+            'React Native',
+            'Expo 57',
+            'TypeScript',
+            'react-native-maps',
+            'expo-location',
+            'Supabase',
+            'PostgreSQL',
+            'PostGIS',
+            'Row Level Security',
+            'Supabase Edge Functions',
+            'Gemini Vision',
+            'Google Sign-In',
+            'SQLite',
+            'Next.js 16',
+            'Tailwind CSS v4',
+            'PostHog',
+            'GitHub Actions',
+        ],
+        thumbnail: '/projects/basha-bazar/thumbnail.png',
+        longThumbnail: '/projects/basha-bazar/long-thumbnail.png',
+        images: [
+            '/projects/basha-bazar/map.png',
+            '/projects/basha-bazar/trail.png',
+            '/projects/basha-bazar/add-tolet.png',
+            '/projects/basha-bazar/detail.png',
+            '/projects/basha-bazar/list.png',
+            '/projects/basha-bazar/landing.png',
+        ],
+        slug: 'basha-bazar',
+        liveUrl: 'https://www.bashabazar.com/',
+    },
+    {
         title: 'Epikcart',
         slug: 'epikcart',
         techStack: [
