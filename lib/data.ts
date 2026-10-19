@@ -165,55 +165,33 @@ export const PROJECTS: IProject[] = [
     {
     title: 'Basha Bazar',
     year: 2026,
-    description: `<p>Rental hunting in Bangladesh does not happen in a search box. Most to-lets are a paper sign taped to a gate, and you only find them by walking the alleys. Basha Bazar is the app for that walk. It records where you have been, lets you pin every to-let you pass, and turns those pins into a map the whole city builds together.</p>
+    description: `<p>Most to-lets in Bangladesh are a paper sign on a gate, never a listing. You find them by walking. Basha Bazar records that walk, pins every to-let you pass, and turns those pins into a map the city builds together.</p>
 
-<p>I built the entire product solo, including the Android app, the Supabase backend, the marketing site, the release pipeline and the growth loops.</p>
+<p>Solo build. App, backend, landing site, release pipeline.</p>
 
-<h3>Walk tracking</h3>
+<h3>Features</h3>
 <ul>
-  <li>Start Walk records your GPS trail in the background with the screen off and the phone in your pocket, through an Android foreground service, and draws it on the map, so you never re-walk an alley you already covered.</li>
-  <li>Recording runs only between Start and Stop, never always-on, behind a Play-compliant prominent disclosure shown before the OS asks for Always location.</li>
-  <li>A Walks screen lists every recorded trail with its distance, and tapping one shows the path.</li>
+  <li>Records your walking trail in the background, screen off.</li>
+  <li>Pin a to-let with photos, rent, rooms, washrooms, floor, contact and notes.</li>
+  <li>AI reads the phone number off a photo of the sign.</li>
+  <li>Tap the number to call the landlord.</li>
+  <li>One place, many contributors. Everyone adds their own block.</li>
+  <li>Browse nearby to-lets in a photo grid, filtered by rent and rooms.</li>
+  <li>Works offline. Pins sync when the network returns.</li>
+  <li>Report bad listings. Two reports hide a place.</li>
 </ul>
 
-<h3>Pinning a to-let</h3>
+<h3>Technical</h3>
 <ul>
-  <li>Drop a pin at your current GPS position, or long-press anywhere on the map.</li>
-  <li>Capture rent, contact, rooms, washrooms, balconies, floor, sunlight, gas, which tenants the landlord accepts, multiple photos and free-text notes, with every field optional.</li>
-  <li>Point the camera at the sign and an AI vision pass reads the phone number straight off the photo into the contact field. Once it holds a dialable number, the scan button becomes a call button.</li>
-  <li>A built-in checklist suggests what else to ask the landlord, such as water hours, advance months, parking and house rules.</li>
-  <li>Each contribution can be public or private. Public is the default, framed as the community bargain rather than a privacy warning.</li>
-</ul>
-
-<h3>A shared map</h3>
-<ul>
-  <li>A to-let is a shared place, not a private note. Each signed-in user adds one editable contribution, and the detail screen stacks every contributor's block with their name, fields and photos.</li>
-  <li>Rent is never averaged or invented. The map shows the newest contribution per place.</li>
-  <li>Map pins are price bubbles over a custom-styled basemap that keeps road names and drops commercial POIs, because foot navigation in Dhaka runs on road names.</li>
-  <li>A draggable bottom sheet lists the same places as a photo-first two-column grid, paging in more as you scroll, with filters for rent range, bedrooms, bathrooms, availability and photos, plus an honest count of how many of the loaded places match.</li>
-  <li>Anyone can report a bad listing. At two distinct reporters a place drops out of the map server-side.</li>
-  <li>Share a single find or the app itself through the OS share sheet. The landlord's number is deliberately left out of a shared to-let.</li>
-</ul>
-
-<h3>Offline-first</h3>
-<ul>
-  <li>Pinning works with no signal. Writes land in a local SQLite outbox and push when connectivity returns, after which the local copy is deleted, so a record lives in exactly one place.</li>
-  <li>The cloud upsert is keyed on the place and user pair, so a retry after a mid-push photo failure can never duplicate a contribution.</li>
-</ul>
-
-<h3>Technical details</h3>
-<ul>
-  <li><strong>React Native with Expo 57</strong> in TypeScript, on a dev build rather than Expo Go. Background location needs native modules, which also rules out a web or PWA version entirely, since browsers cannot record GPS with the screen off.</li>
-  <li><strong>Background GPS</strong> through expo-location and expo-task-manager, with a top-level task definition, an Android foreground service and its persistent notification, and UIBackgroundModes on iOS.</li>
-  <li><strong>Supabase backend</strong> running Postgres and PostGIS for the viewport query, row level security on every table so a user reads what is public or theirs and writes only their own rows, Storage for photos, and SQL migrations kept in the repo.</li>
-  <li><strong>Google sign-in</strong> behind a login wall, exchanging the native ID token for a Supabase session, with account deletion that purges storage and cascades every row the user owns.</li>
-  <li><strong>Edge Functions</strong> hold the secrets the binary must never contain. The Gemini vision call and the account-delete flow both run server-side behind a verified JWT.</li>
-  <li><strong>Vision cost control</strong> by downscaling each image to 768px and re-encoding it before the model call, so a scan costs one Gemini image tile instead of a dozen.</li>
-  <li><strong>Native rendering traps solved the hard way.</strong> Android snapshots child-view map markers to bitmaps, so price bubbles keep tracking view changes until layout settles, and they must use the system font, because a custom family is not ready at capture time and the pin snapshots blank.</li>
-  <li><strong>Analytics with privacy rules</strong> through PostHog product analytics and session replay. Replay masks all images and inputs, third-party phone numbers rendered as plain text are explicitly wrapped, and no event property ever carries rent, contact, photos or coordinates.</li>
-  <li><strong>AppsFlyer</strong> for ad install attribution only, with no product events, and fully off without a dev key.</li>
-  <li><strong>Tag-driven releases.</strong> Pushing a version tag makes GitHub Actions build a signed, R8-minified AAB and upload it to the Play internal track. Both the version name and the version code are derived from the tag, so a version can never be hand-bumped into a duplicate.</li>
-  <li><strong>Landing site</strong> in Next.js 16 with the App Router, Tailwind v4 and Motion, Bangla-first with English at the /en route and a typed dictionary that fails the build on a missing key.</li>
+  <li>React Native and Expo 57, dev build, TypeScript.</li>
+  <li>Background GPS via expo-location and an Android foreground service.</li>
+  <li>Supabase with Postgres, PostGIS viewport queries and row level security.</li>
+  <li>Google sign-in behind a login wall, native ID token into a Supabase session.</li>
+  <li>Gemini vision in an Edge Function, so no API key ships in the binary.</li>
+  <li>Offline outbox in SQLite with idempotent upserts, so retries never duplicate.</li>
+  <li>PostHog analytics and session replay, masked so no rent, contact or location leaks.</li>
+  <li>Tag-driven CI builds a signed AAB straight to the Play internal track.</li>
+  <li>Landing site in Next.js 16 and Tailwind v4, Bangla-first with English at /en.</li>
 </ul>`,
         role: 'Solo developer — product, design, mobile app, backend, landing site, release pipeline and growth',
         techStack: [
