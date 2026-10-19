@@ -165,44 +165,56 @@ export const PROJECTS: IProject[] = [
     {
     title: 'Basha Bazar',
     year: 2026,
-    description: `Rental hunting in Bangladesh does not happen in a search box. Most to-lets are a paper sign taped to a gate — you find them by walking the alleys. Basha Bazar is the app for that walk: it records where you have been, lets you pin every to-let you pass, and turns those pins into a map the whole city builds together.
+    description: `<p>Rental hunting in Bangladesh does not happen in a search box. Most to-lets are a paper sign taped to a gate, and you only find them by walking the alleys. Basha Bazar is the app for that walk. It records where you have been, lets you pin every to-let you pass, and turns those pins into a map the whole city builds together.</p>
 
-    I built the whole product solo — the Android app, the Supabase backend, the marketing site, the release pipeline and the growth loops.
+<p>I built the entire product solo, including the Android app, the Supabase backend, the marketing site, the release pipeline and the growth loops.</p>
 
-    ### What it does
+<h3>Walk tracking</h3>
+<ul>
+  <li>Start Walk records your GPS trail in the background with the screen off and the phone in your pocket, through an Android foreground service, and draws it on the map, so you never re-walk an alley you already covered.</li>
+  <li>Recording runs only between Start and Stop, never always-on, behind a Play-compliant prominent disclosure shown before the OS asks for Always location.</li>
+  <li>A Walks screen lists every recorded trail with its distance, and tapping one shows the path.</li>
+</ul>
 
-    **Walk tracking**
-    - Start Walk records your GPS trail in the background — screen off, phone in pocket — via an Android foreground service, and draws it on the map, so you never re-walk an alley you already covered.
-    - Recording only runs between Start and Stop, never always-on, with a Play-compliant prominent-disclosure prompt before the OS asks for "Always" location.
-    - A Walks screen lists every recorded trail with its distance; tap to view the path.
+<h3>Pinning a to-let</h3>
+<ul>
+  <li>Drop a pin at your current GPS position, or long-press anywhere on the map.</li>
+  <li>Capture rent, contact, rooms, washrooms, balconies, floor, sunlight, gas, which tenants the landlord accepts, multiple photos and free-text notes, with every field optional.</li>
+  <li>Point the camera at the sign and an AI vision pass reads the phone number straight off the photo into the contact field. Once it holds a dialable number, the scan button becomes a call button.</li>
+  <li>A built-in checklist suggests what else to ask the landlord, such as water hours, advance months, parking and house rules.</li>
+  <li>Each contribution can be public or private. Public is the default, framed as the community bargain rather than a privacy warning.</li>
+</ul>
 
-    **Pinning a to-let**
-    - Drop a pin at your current GPS, or long-press anywhere on the map.
-    - Capture rent, contact, rooms, washrooms, balconies, floor, sunlight, gas, which tenants the landlord accepts, multiple photos, and free-text notes — every field optional.
-    - Point the camera at the sign and an AI vision pass reads the phone number straight off the photo into the contact field; once it holds a dialable number the scan button turns into a call button.
-    - A built-in checklist suggests what else to ask the landlord (water hours, advance months, parking, rules).
-    - Toggle each contribution public or private — public is the default, framed as the community bargain.
+<h3>A shared map</h3>
+<ul>
+  <li>A to-let is a shared place, not a private note. Each signed-in user adds one editable contribution, and the detail screen stacks every contributor's block with their name, fields and photos.</li>
+  <li>Rent is never averaged or invented. The map shows the newest contribution per place.</li>
+  <li>Map pins are price bubbles over a custom-styled basemap that keeps road names and drops commercial POIs, because foot navigation in Dhaka runs on road names.</li>
+  <li>A draggable bottom sheet lists the same places as a photo-first two-column grid, paging in more as you scroll, with filters for rent range, bedrooms, bathrooms, availability and photos, plus an honest count of how many of the loaded places match.</li>
+  <li>Anyone can report a bad listing. At two distinct reporters a place drops out of the map server-side.</li>
+  <li>Share a single find or the app itself through the OS share sheet. The landlord's number is deliberately left out of a shared to-let.</li>
+</ul>
 
-    **A shared map**
-    - A to-let is a shared place, not a private note. Each signed-in user adds one editable contribution; the detail screen stacks every contributor's block with their name, fields and photos.       - Rent is never averaged or invented — the map shows the newest contribution per pla
-    - Map pins are price bubbles (৳18k, ৳1.2L) over a custom-styled basemap that keeps road names and drops commercial POIs, because foot navigation in Dhaka runs on road names.                      - A draggable bottom sheet lists the same places as a photo-first two-column grid, pl, with client-side filters for rent range, bedrooms, bathrooms, availability andphotos — and an honest "N of M shown" label.                                                                                                                                                       - Report a bad listing; at two distinct reporters a place drops out of the map serve
-    - Share a find or the app itself through the OS share sheet — the landlord's number is deliberately never included.                                                                                
-    **Offline-first**                                                                                                                                                                                  - Pinning works with no signal: writes land in a local SQLite outbox and push when cthe local copy is deleted so a record lives in exactly one place.
-    - The cloud upsert is keyed on (place, user), so a retry after a mid-push photo failure can never duplicate a contribution.                                                                        
-    ### Technical details                                                                                                                                                                              
-    - **React Native + Expo 57 (dev build, not Expo Go)** with TypeScript. Background location needs native modules, which also rules out a web/PWA version entirely — browsers cannot record GPS with the screen off.
-    - **Background GPS** through expo-location + expo-task-manager: a top-level task definition, an Android foreground service with a persistent notification, and UIBackgroundModes on iOS.
-    - **Supabase** backend — Postgres + PostGIS for the viewport query, row-level securiblic-or-mine, write only your own), Storage for photos, and SQL migrations in therepo.
-    - **Google sign-in** behind a login wall: native ID token exchanged for a Supabase sion that purges storage and cascades the user's rows.
-    - **Edge Functions** hold the secrets the binary must never contain — the Gemini vision call and the account-delete flow both run server-side behind a verified JWT.
-    - **Vision cost control**: images are downscaled to 768px and re-encoded before the s a single Gemini image tile instead of a dozen.
-    - **Rendering traps solved the hard way**: Android snapshots child-view map markers to bitmaps, so price bubbles keep tracksViewChanges on until layout settles and must use the system font — a
-    custom family is not ready at capture time and the pin snapshots blank.
-    - **Analytics with privacy rules**: PostHog product analytics and session replay, where replay masks all images and inputs, third-party phone numbers rendered as plain text are explicitly
-    wrapped, and no event property ever carries rent, contact, photos or coordinates.
-    - **AppsFlyer** for ad install attribution only — no product events, off entirely without a dev key.
-    - **Releases are tag-driven CI**: push a version tag and GitHub Actions builds a sigploads it to the Play internal track; both versionName and versionCode are derivedfrom the tag so a version can never be hand-bumped into a duplicate.
-    - **Landing site** in Next.js 16 (App Router) + Tailwind v4 + Motion, Bangla-first wyped dictionary that fails the build on a missing key.`,
+<h3>Offline-first</h3>
+<ul>
+  <li>Pinning works with no signal. Writes land in a local SQLite outbox and push when connectivity returns, after which the local copy is deleted, so a record lives in exactly one place.</li>
+  <li>The cloud upsert is keyed on the place and user pair, so a retry after a mid-push photo failure can never duplicate a contribution.</li>
+</ul>
+
+<h3>Technical details</h3>
+<ul>
+  <li><strong>React Native with Expo 57</strong> in TypeScript, on a dev build rather than Expo Go. Background location needs native modules, which also rules out a web or PWA version entirely, since browsers cannot record GPS with the screen off.</li>
+  <li><strong>Background GPS</strong> through expo-location and expo-task-manager, with a top-level task definition, an Android foreground service and its persistent notification, and UIBackgroundModes on iOS.</li>
+  <li><strong>Supabase backend</strong> running Postgres and PostGIS for the viewport query, row level security on every table so a user reads what is public or theirs and writes only their own rows, Storage for photos, and SQL migrations kept in the repo.</li>
+  <li><strong>Google sign-in</strong> behind a login wall, exchanging the native ID token for a Supabase session, with account deletion that purges storage and cascades every row the user owns.</li>
+  <li><strong>Edge Functions</strong> hold the secrets the binary must never contain. The Gemini vision call and the account-delete flow both run server-side behind a verified JWT.</li>
+  <li><strong>Vision cost control</strong> by downscaling each image to 768px and re-encoding it before the model call, so a scan costs one Gemini image tile instead of a dozen.</li>
+  <li><strong>Native rendering traps solved the hard way.</strong> Android snapshots child-view map markers to bitmaps, so price bubbles keep tracking view changes until layout settles, and they must use the system font, because a custom family is not ready at capture time and the pin snapshots blank.</li>
+  <li><strong>Analytics with privacy rules</strong> through PostHog product analytics and session replay. Replay masks all images and inputs, third-party phone numbers rendered as plain text are explicitly wrapped, and no event property ever carries rent, contact, photos or coordinates.</li>
+  <li><strong>AppsFlyer</strong> for ad install attribution only, with no product events, and fully off without a dev key.</li>
+  <li><strong>Tag-driven releases.</strong> Pushing a version tag makes GitHub Actions build a signed, R8-minified AAB and upload it to the Play internal track. Both the version name and the version code are derived from the tag, so a version can never be hand-bumped into a duplicate.</li>
+  <li><strong>Landing site</strong> in Next.js 16 with the App Router, Tailwind v4 and Motion, Bangla-first with English at the /en route and a typed dictionary that fails the build on a missing key.</li>
+</ul>`,
         role: 'Solo developer — product, design, mobile app, backend, landing site, release pipeline and growth',
         techStack: [
             'React Native',
