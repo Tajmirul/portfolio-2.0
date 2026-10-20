@@ -227,8 +227,8 @@ export const PROJECTS: IProject[] = [
         liveUrl: 'https://www.bashabazar.com/',
     },
     {
-        title: 'Epikcart',
-        slug: 'epikcart',
+        title: 'Bango Shop',
+        slug: 'bango-shop',
         techStack: [
             'React',
             'Redux',
@@ -247,9 +247,9 @@ export const PROJECTS: IProject[] = [
             '/projects/images/epikcart-4.png',
             '/projects/images/epikcart-5.png',
         ],
-        liveUrl: 'https://demo.epikcart.siphertech.com/',
+        liveUrl: 'https://bangoshop.com/',
         year: 2023,
-        description: `Epikcart is a feature-rich, scalable e-commerce platform tailored for large businesses. It features dynamic product filtering, multi-language support with RTL, advanced inventory management, order tracking, and refund systems, offering a comprehensive solution for multi-vendor operations.`,
+        description: `Bango Shop is a feature-rich, scalable e-commerce platform tailored for large businesses. It features dynamic product filtering, multi-language support with RTL, advanced inventory management, order tracking, and refund systems, offering a comprehensive solution for multi-vendor operations.`,
         role: `As the frontend developer in a team of five, I: <br/>
         - Built the frontend from scratch using React, Redux, RTK Query, and Tailwind CSS.<br/>
         - Developed dynamic filtering logic for the product search page with admin-configurable parameters.<br/>
